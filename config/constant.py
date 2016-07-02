@@ -5,7 +5,8 @@ class DbConfig(object):
 
     USER = 'root'
     PASSWORD = 'lf721521'
-    HOST = 'ec2-54-200-98-228.us-west-2.compute.amazonaws.com:3306'
+    # HOST = 'ec2-54-200-98-228.us-west-2.compute.amazonaws.com:3306'
+    HOST = '54.200.98.228:3306'
     DB = 'server'
 
     @classmethod
