@@ -5,8 +5,13 @@ from config.constant import DbConfig
 app = Flask(__name__)
 db_uri = DbConfig.get_db_uri()
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
-print db_uri
 db = SQLAlchemy(app)
+
+def init_db():
+    db.create_all()
+
+def flush():
+    db.session.commit()
 
 from sqlalchemy import (
     Table,
@@ -25,5 +30,3 @@ class GamerTester(db.Model):
     name = db.Column('username', String(30), unique=True)
     email = db.Column('email', String(50), unique=True)
     password = db.Column('password', String(100), unique=False)
-
-
