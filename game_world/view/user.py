@@ -5,6 +5,11 @@ cache = SimpleCache()
 # cache.set(key, rv, timeout=5*60)
 
 from app import app
+user = Blueprint(
+    'user',
+     __name__,
+     template_folder='templates'
+)
 
 class UserAPI(MethodView):
 
