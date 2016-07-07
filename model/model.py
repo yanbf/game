@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from config.constant import DbConfig
+from app import app
 
-app = Flask(__name__)
 db_uri = DbConfig.get_db_uri()
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 db = SQLAlchemy(app)
