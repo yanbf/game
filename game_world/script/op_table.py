@@ -3,7 +3,7 @@ from model.model import db
 
 if __name__ == '__main__':
     '''
-
+    create and delete tables
     '''
     parser = argparse.ArgumentParser(description='operation on database.')
     parser.add_argument('-c', action='store_true', help='create table.')

@@ -1,3 +1,4 @@
+from flask import Blueprint
 from flask.views import MethodView
 from werkzeug.contrib.cache import SimpleCache
 cache = SimpleCache()
