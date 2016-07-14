@@ -1,53 +1,69 @@
-from flask import Blueprint
-from flask.views import MethodView
+from flask import (
+    Blueprint,
+    request,
+    session,
+    g,
+    redirect,
+    url_for,
+    abort,
+    render_template,
+    flash
+)
 from werkzeug.contrib.cache import SimpleCache
+from app import app
+from model.model import (
+    db,
+    GamerTester
+)
+
 cache = SimpleCache()
 # rv = cache.get(key)
 # cache.set(key, rv, timeout=5*60)
 
-from app import app
 user = Blueprint(
     'user',
-     __name__,
-     template_folder='templates'
+    __name__,
+    template_folder='templates'
 )
 
-class UserAPI(MethodView):
 
-    def get(self, user_id):
-        if user_id is None:
-            # return a list of users
-            pass
+@user.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] != app.config['USERNAME']:
+            error = 'Invalid username'
+        elif request.form['password'] != app.config['PASSWORD']:
+            error = 'Invalid password'
         else:
-            # expose a single user
-            pass
-
-    def post(self):
-        # create a new user
-        pass
-
-    def delete(self, user_id):
-        # delete a single user
-        pass
-
-    def put(self, user_id):
-        # update a single user
-        pass
+            session['logged_in'] = True
+            flash('You were logged in')
+            return redirect(url_for('show_entries'))
+    return render_template('login.html', error=error)
 
 
-def register_api(view, endpoint, url, pk='id', pk_type='int'):
-    view_func = view.as_view(endpoint)
-    app.add_url_rule(
-        url,
-        defaults={pk: None},
-        view_func=view_func,
-        methods=['GET', ]
-    )
-    app.add_url_rule(url, view_func=view_func, methods=['POST', ])
-    app.add_url_rule(
-        '%s<%s:%s>' % (url, pk_type, pk),
-         view_func=view_func,
-         methods=['GET', 'PUT', 'DELETE']
-    )
+@user.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    flash('You were logged out')
+    return redirect(url_for('show_entries'))
 
-register_api(UserAPI, 'user_api', '/users/', pk='user_id')
+
+@user.route('/add', methods=['POST'])
+def add_entry():
+    if not session.get('logged_in'):
+        abort(401)
+    db = get_db()
+    db.execute('insert into entries (title, text) values (?, ?)',
+                 [request.form['title'], request.form['text']])
+    db.commit()
+    flash('New entry was successfully posted')
+    return redirect(url_for('show_entries'))
+
+
+@user.route('/')
+def show_entries():
+    db = get_db()
+    cur = db.execute('select title, text from entries order by id desc')
+    entries = cur.fetchall()
+    return render_template('show_entries.html', entries=entries)
