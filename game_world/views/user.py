@@ -23,7 +23,9 @@ cache = SimpleCache()
 user = Blueprint(
     'user',
     __name__,
-    template_folder='templates'
+    template_folder='templates',
+    static_folder='static',
+    url_prefix='/user'
 )
 
 
@@ -38,7 +40,7 @@ def login():
         else:
             session['logged_in'] = True
             flash('You were logged in')
-            return redirect(url_for('show_entries'))
+            return redirect(url_for('user.show_entries'))
     return render_template('login.html', error=error)
 
 
@@ -46,7 +48,7 @@ def login():
 def logout():
     session.pop('logged_in', None)
     flash('You were logged out')
-    return redirect(url_for('show_entries'))
+    return redirect(url_for('user.show_entries'))
 
 
 @user.route('/add', methods=['POST'])
@@ -58,12 +60,10 @@ def add_entry():
                  [request.form['title'], request.form['text']])
     db.commit()
     flash('New entry was successfully posted')
-    return redirect(url_for('show_entries'))
+    return redirect(url_for('user.show_entries'))
 
 
 @user.route('/')
 def show_entries():
-    db = get_db()
-    cur = db.execute('select title, text from entries order by id desc')
-    entries = cur.fetchall()
+    entries = GamerTester.query.all()
     return render_template('show_entries.html', entries=entries)

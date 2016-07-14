@@ -13,7 +13,7 @@ class Config(object):
         HOST,
         DB
     )
-
+    SECRET_KEY = 'yanbofei is handsome!'
     DEBUG = False
     TESTING = False
 
@@ -22,6 +22,8 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    USERNAME = 'yanbf'
+    PASSWORD = 'lf721521'
 
 class TestingConfig(Config):
     TESTING = True
