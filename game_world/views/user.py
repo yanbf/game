@@ -10,7 +10,6 @@ from flask import (
     flash
 )
 from werkzeug.contrib.cache import SimpleCache
-from game import app
 from model.model import GamerTester
 
 cache = SimpleCache()
@@ -28,6 +27,7 @@ user = Blueprint(
 
 @user.route('/login', methods=['GET', 'POST'])
 def login():
+    from game import app
     error = None
     if request.method == 'POST':
         if request.form['username'] != app.config['USERNAME']:
