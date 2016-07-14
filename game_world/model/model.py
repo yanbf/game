@@ -1,4 +1,4 @@
-from game  import db
+from app import db
 
 from sqlalchemy import (
     Table,
