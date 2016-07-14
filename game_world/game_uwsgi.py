@@ -2,8 +2,8 @@
 ; These are placeholders..
 
 ; And these aren't
-wsgi-file = app.py
-callable = app
+wsgi-file = game.py
+callable = game 
 master = 1
 processes = 4
 virtualenv = /home/ubuntu/.project_env/game
