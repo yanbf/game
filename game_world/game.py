@@ -3,6 +3,7 @@ from flask import (
     Blueprint
 )
 from flask_sqlalchemy import SQLAlchemy
+from views.user import user
 
 # load config
 app = Flask(__name__, instance_relative_config=True)
@@ -13,6 +14,5 @@ app.config.from_pyfile('application.cfg', silent=True)
 db = SQLAlchemy(app)
 
 # register blueprints
-from views.user import user
 app.register_blueprint(user)
 
